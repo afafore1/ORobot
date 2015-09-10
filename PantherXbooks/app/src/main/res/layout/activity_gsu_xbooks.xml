@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GsuXbooks"
+    android:background="@drawable/custom_button3">
+
+    <Button
+        android:id="@+id/btn_Buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buy"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/custom_button1"
+        android:textColor="@android:color/white"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sell"
+        android:id="@+id/btn_Sell"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/btn_Buy"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/custom_button2"
+        android:textColor="@android:color/white"
+        android:onClick="searchBooks"
+       />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="I am looking to "
+        android:id="@+id/txt_what"
+        android:textColor="@android:color/white"
+        android:textStyle="bold|italic"
+        android:textSize="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="59dp" />
+
+</RelativeLayout>
