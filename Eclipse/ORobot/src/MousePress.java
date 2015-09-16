@@ -1,8 +1,12 @@
 import java.awt.AWTException;
+import java.awt.Desktop;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,9 +30,9 @@ public class MousePress {
 	}
 
 	public void moveMouse(int x, int y){
-		bot.delay(200);
+		bot.delay(500);
 		bot.mouseMove(x, y);
-		bot.delay(200);
+		bot.delay(500);
 	}
 
 	public void lClick(){
@@ -38,21 +42,21 @@ public class MousePress {
 
 	public void rClick(){
 		rightClick();
-		bot.delay(200);
+		bot.delay(500);
 		//rightClick();
 	}
 	public void leftClick(){
 		bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-		bot.delay(200);
+		bot.delay(500);
 		bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-		bot.delay(200);
+		bot.delay(500);
 	}
 
 	public void rightClick(){
 		bot.mousePress(InputEvent.BUTTON3_DOWN_MASK);
-		bot.delay(200);
+		bot.delay(500);
 		bot.mouseRelease(InputEvent.BUTTON3_DOWN_MASK);
-		bot.delay(200);
+		bot.delay(500);
 	}
 
 	private void type(int i){ // type int, might remove this
@@ -63,7 +67,7 @@ public class MousePress {
 
 	@SuppressWarnings("restriction")
 	private void type(String s){ // type words here
-		bot.delay(400);
+		bot.delay(300);
 		byte [] b = s.getBytes();
 		for(byte i : b){
 			int c = i;
@@ -96,11 +100,14 @@ public class MousePress {
 			}else if(c == 76){
 				bot.keyPress(KeyEvent.VK_LESS);
 				continue;
+			}else if(c == 62){
+				bot.keyPress(KeyEvent.VK_GREATER);
+				continue;
 			}
 			else if(c > 96 && c < 123){
 				c -=32;
 			}
-			bot.delay(200);
+			bot.delay(300);
 			//System.out.println("typing "+c);
 			bot.keyPress(c);
 			bot.keyRelease(c);
@@ -141,12 +148,12 @@ public class MousePress {
 		return words;
 
 	}
-	
+
 	public MousePress() throws AWTException{
 		@SuppressWarnings("resource")
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter your username: "); // using this to get user's username
-		String username = sc.nextLine();
+		//System.out.println("Enter your username: "); // using this to get user's username
+		String username = "ayo";
 		bot.setAutoDelay(40);
 		bot.setAutoWaitForIdle(true);
 		List<String> commands = new ArrayList<String>();
@@ -158,7 +165,7 @@ public class MousePress {
 		}
 		for(int i = 0; i < commands.size(); i++){
 			//bot.delay(200); // wait for 200 ms before doing anything
-			
+
 			String MouseClick = commands.get(i);
 			if(commands.get(i).startsWith("M")){
 				String sp = " ";
@@ -176,7 +183,7 @@ public class MousePress {
 					lClick();
 				}
 			}else if(commands.get(i).contains("Sl")){ // sleep action
-				bot.delay(100);
+				bot.delay(300);
 			}else{
 				String Tpthis = MouseClick.substring(MouseClick.indexOf(" ") + 1);
 				type(Tpthis);
@@ -184,11 +191,56 @@ public class MousePress {
 		}
 	}
 
+	// check task manager to see if the app is running
+	public static boolean isRunning(String name) throws IOException{
+		String line;
+		String pidInfo ="";
 
-	public static void main(String[] args) throws AWTException {
+		Process p =Runtime.getRuntime().exec(System.getenv("windir") +"\\system32\\"+"tasklist.exe");
 
-		new MousePress();
+		BufferedReader input =  new BufferedReader(new InputStreamReader(p.getInputStream()));
 
+		while ((line = input.readLine()) != null) {
+			pidInfo+=line; 
+		}
+		input.close();
+		if(pidInfo.contains(name))
+		{
+			return true;
+		}
+		return false;
+	}
+	// try to open an application, if the app is already opened tell user it is running already 
+	public static void OpenApp(String location) throws AWTException{
+		//Process p = null;
+		try{
+			Runtime r = Runtime.getRuntime();
+			String Appname = location.substring(location.lastIndexOf("\\")+1);
+			if(isRunning(Appname)){
+				System.out.println("Program is already running!!\nTest will start now");
+				Process p = r.exec(location);
+				new MousePress();
+			}else{
+				System.out.println("Opening "+location+" ...");				
+				Process p = r.exec(location);
+				new MousePress();
+				try{
+					Thread.sleep(5000);
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+
+	public static void main(String[] args) throws AWTException, IOException {
+
+		//new MousePress();
+		OpenApp("C:\\Program Files\\Sublime Text 2\\sublime_text.exe");
+		
 	}
 
 }
